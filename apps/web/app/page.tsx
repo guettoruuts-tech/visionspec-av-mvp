@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 type Recommendation = {
   regime: string;
@@ -22,6 +22,7 @@ export default function HomePage() {
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState<StudyResponse | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [specs, setSpecs] = useState<any[]>([]);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -59,6 +60,13 @@ export default function HomePage() {
 
       const data = (await res.json()) as StudyResponse;
       setResult(data);
+      // fetch base specs to display
+      try {
+        const s = await fetch('/api/specs');
+        if (s.ok) setSpecs(await s.json());
+      } catch (err) {
+        /* ignore */
+      }
     } catch (e: any) {
       setError(e?.message ?? 'Erro desconhecido');
     } finally {
@@ -125,6 +133,35 @@ export default function HomePage() {
         <div style={{ marginTop: 16, color: '#b91c1c' }}>
           <strong>Erro:</strong> {error}
         </div>
+      )}
+      {specs.length > 0 && (
+        <section style={{ marginTop: 22 }}>
+          <h3 style={{ fontSize: 16, fontWeight: 800 }}>Tabela técnica (amostra)</h3>
+          <div style={{ marginTop: 8, overflowX: 'auto' }}>
+            <table style={{ borderCollapse: 'collapse', width: '100%' }}>
+              <thead>
+                <tr>
+                  <th style={{ textAlign: 'left', padding: 6 }}>Polegadas</th>
+                  <th style={{ textAlign: 'left', padding: 6 }}>Diag (m)</th>
+                  <th style={{ textAlign: 'left', padding: 6 }}>Dist. 4H (m)</th>
+                  <th style={{ textAlign: 'left', padding: 6 }}>Dist. 6H (m)</th>
+                  <th style={{ textAlign: 'left', padding: 6 }}>Dist. 8H (m)</th>
+                </tr>
+              </thead>
+              <tbody>
+                {specs.map((s, i) => (
+                  <tr key={i}>
+                    <td style={{ padding: 6 }}>{s.size_inches}</td>
+                    <td style={{ padding: 6 }}>{(s.diagonal_inches * 0.0254).toFixed(3)}</td>
+                    <td style={{ padding: 6 }}>{s.distance_4h_m}</td>
+                    <td style={{ padding: 6 }}>{s.distance_6h_m}</td>
+                    <td style={{ padding: 6 }}>{s.distance_8h_m}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </section>
       )}
 
       {result && (
