@@ -1,0 +1,226 @@
+[
+  {
+    "size_inches": 32,
+    "diagonal_inches": 15.68836,
+    "distance_4h_m": 1.593936,
+    "distance_6h_m": 2.390905,
+    "distance_8h_m": 3.187873
+  },
+  {
+    "size_inches": 40,
+    "diagonal_inches": 19.61045,
+    "distance_4h_m": 1.992421,
+    "distance_6h_m": 2.988631,
+    "distance_8h_m": 3.984841
+  },
+  {
+    "size_inches": 42,
+    "diagonal_inches": 20.590972,
+    "distance_4h_m": 2.092042,
+    "distance_6h_m": 3.138062,
+    "distance_8h_m": 4.184083
+  },
+  {
+    "size_inches": 43,
+    "diagonal_inches": 21.081233,
+    "distance_4h_m": 2.141852,
+    "distance_6h_m": 3.212778,
+    "distance_8h_m": 4.283704
+  },
+  {
+    "size_inches": 47,
+    "diagonal_inches": 23.042278,
+    "distance_4h_m": 2.341094,
+    "distance_6h_m": 3.511641,
+    "distance_8h_m": 4.682188
+  },
+  {
+    "size_inches": 50,
+    "diagonal_inches": 24.513062,
+    "distance_4h_m": 2.490526,
+    "distance_6h_m": 3.735789,
+    "distance_8h_m": 4.981052
+  },
+  {
+    "size_inches": 55,
+    "diagonal_inches": 26.964368,
+    "distance_4h_m": 2.739578,
+    "distance_6h_m": 4.109367,
+    "distance_8h_m": 5.479157
+  },
+  {
+    "size_inches": 60,
+    "diagonal_inches": 29.415674,
+    "distance_4h_m": 2.988631,
+    "distance_6h_m": 4.482946,
+    "distance_8h_m": 5.977262
+  },
+  {
+    "size_inches": 65,
+    "diagonal_inches": 31.866981,
+    "distance_4h_m": 3.237683,
+    "distance_6h_m": 4.856525,
+    "distance_8h_m": 6.475367
+  },
+  {
+    "size_inches": 75,
+    "diagonal_inches": 36.769593,
+    "distance_4h_m": 3.735789,
+    "distance_6h_m": 5.603683,
+    "distance_8h_m": 7.471577
+  },
+  {
+    "size_inches": 80,
+    "diagonal_inches": 39.220899,
+    "distance_4h_m": 3.984841,
+    "distance_6h_m": 5.977262,
+    "distance_8h_m": 7.969682
+  },
+  {
+    "size_inches": 85,
+    "diagonal_inches": 41.672205,
+    "distance_4h_m": 4.233894,
+    "distance_6h_m": 6.350841,
+    "distance_8h_m": 8.467788
+  },
+  {
+    "size_inches": 86,
+    "diagonal_inches": 42.162467,
+    "distance_4h_m": 4.283704,
+    "distance_6h_m": 6.425556,
+    "distance_8h_m": 8.567409
+  },
+  {
+    "size_inches": 90,
+    "diagonal_inches": 44.123512,
+    "distance_4h_m": 4.482946,
+    "distance_6h_m": 6.72442,
+    "distance_8h_m": 8.965893
+  },
+  {
+    "size_inches": 95,
+    "diagonal_inches": 46.574818,
+    "distance_4h_m": 4.731999,
+    "distance_6h_m": 7.097998,
+    "distance_8h_m": 9.463998
+  },
+  {
+    "size_inches": 98,
+    "diagonal_inches": 48.045601,
+    "distance_4h_m": 4.88143,
+    "distance_6h_m": 7.322146,
+    "distance_8h_m": 9.762861
+  },
+  {
+    "size_inches": 100,
+    "diagonal_inches": 49.026124,
+    "distance_4h_m": 4.981052,
+    "distance_6h_m": 7.471577,
+    "distance_8h_m": 9.962103
+  },
+  {
+    "size_inches": 105,
+    "diagonal_inches": 51.47743,
+    "distance_4h_m": 5.230104,
+    "distance_6h_m": 7.845156,
+    "distance_8h_m": 10.460208
+  },
+  {
+    "size_inches": 110,
+    "diagonal_inches": 53.928736,
+    "distance_4h_m": 5.479157,
+    "distance_6h_m": 8.218735,
+    "distance_8h_m": 10.958313
+  },
+  {
+    "size_inches": 115,
+    "diagonal_inches": 56.380043,
+    "distance_4h_m": 5.728209,
+    "distance_6h_m": 8.592314,
+    "distance_8h_m": 11.456418
+  },
+  {
+    "size_inches": 120,
+    "diagonal_inches": 58.831349,
+    "distance_4h_m": 5.977262,
+    "distance_6h_m": 8.965893,
+    "distance_8h_m": 11.954524
+  },
+  {
+    "size_inches": 125,
+    "diagonal_inches": 61.282655,
+    "distance_4h_m": 6.226314,
+    "distance_6h_m": 9.339472,
+    "distance_8h_m": 12.452629
+  },
+  {
+    "size_inches": 130,
+    "diagonal_inches": 63.733961,
+    "distance_4h_m": 6.475367,
+    "distance_6h_m": 9.71305,
+    "distance_8h_m": 12.950734
+  },
+  {
+    "size_inches": 136,
+    "diagonal_inches": 66.675529,
+    "distance_4h_m": 6.77423,
+    "distance_6h_m": 10.161345,
+    "distance_8h_m": 13.54846
+  },
+  {
+    "size_inches": 140,
+    "diagonal_inches": 68.636574,
+    "distance_4h_m": 6.973472,
+    "distance_6h_m": 10.460208,
+    "distance_8h_m": 13.946944
+  },
+  {
+    "size_inches": 146,
+    "diagonal_inches": 71.578141,
+    "distance_4h_m": 7.272335,
+    "distance_6h_m": 10.908503,
+    "distance_8h_m": 14.54467
+  },
+  {
+    "size_inches": 150,
+    "diagonal_inches": 73.539186,
+    "distance_4h_m": 7.471577,
+    "distance_6h_m": 11.207366,
+    "distance_8h_m": 14.943155
+  },
+  {
+    "size_inches": 155,
+    "diagonal_inches": 75.990492,
+    "distance_4h_m": 7.72063,
+    "distance_6h_m": 11.580945,
+    "distance_8h_m": 15.44126
+  },
+  {
+    "size_inches": 160,
+    "diagonal_inches": 78.441798,
+    "distance_4h_m": 7.969682,
+    "distance_6h_m": 11.954524,
+    "distance_8h_m": 15.939365
+  },
+  {
+    "size_inches": 163,
+    "diagonal_inches": 79.912582,
+    "distance_4h_m": 8.119114,
+    "distance_6h_m": 12.178671,
+    "distance_8h_m": 16.238228
+  },
+  {
+    "size_inches": 165,
+    "diagonal_inches": 80.893105,
+    "distance_4h_m": 8.218735,
+    "distance_6h_m": 12.328102,
+    "distance_8h_m": 16.43747
+  },
+  {
+    "size_inches": 170,
+    "diagonal_inches": 83.344411,
+    "distance_4h_m": 8.467788,
+    "distance_6h_m": 12.701681,
+    "distance_8h_m": 16.935575
+  }
+]

@@ -1,0 +1,13 @@
+{
+  "name": "visionspec-av-mvp",
+  "private": true,
+  "workspaces": [
+    "apps/web",
+    "packages/engine"
+  ],
+  "scripts": {
+    "build": "npm run build --workspace @visionspec/engine && npm run build --workspace @visionspec/web",
+    "dev:web": "npm run dev --workspace @visionspec/web",
+    "test:engine": "npm run test --workspace @visionspec/engine"
+  }
+}
