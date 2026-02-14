@@ -45,6 +45,8 @@ def recommend(viewing_distance_m: float, regime: Regime) -> dict:
     return {
         'regime': regime,
         'recommended_size_inches': match['size_inches'],
+        'recommended_diagonal_inches': match.get('diagonal_inches'),
+        'recommended_diagonal_m': round(match.get('diagonal_inches', 0) * 0.0254, 3),
         'max_distance_m': round(max_distance, 3),
         'within_spec': viewing_distance_m <= max_distance,
     }

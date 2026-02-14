@@ -30,10 +30,21 @@ def generate_pdf(study: dict) -> bytes:
     y -= 24
 
     pdf.setFont('Helvetica', 11)
+    # Map regime codes to user-friendly descriptions
+    regime_map = {
+        '4H': '4H — Visualização em detalhes',
+        '6H': '6H — Conteúdo de apresentação',
+        '8H': '8H — Conteúdo de vídeos',
+    }
     for rec in study['recommendations']:
+        regime_label = regime_map.get(rec.get('regime', ''), rec.get('regime', ''))
+        status = 'Dentro da especificação' if rec.get('within_spec') else 'Acima da especificação'
+        size_in = rec.get('recommended_size_inches')
+        diag_in = rec.get('recommended_diagonal_inches')
+        diag_m = rec.get('recommended_diagonal_m')
         line = (
-            f"{rec['regime']}: {rec['recommended_size_inches']}\" · Distância máxima {rec['max_distance_m']} m"
-            f" · {'Dentro da especificação' if rec['within_spec'] else 'Acima da especificação'}"
+            f"{regime_label}: {size_in}\" (diag. {round(diag_in,1) if diag_in else ''} in / {diag_m if diag_m else ''} m) · "
+            f"Distância máxima {rec.get('max_distance_m')} m · {status}"
         )
         pdf.drawString(40, y, line)
         y -= 18
