@@ -220,10 +220,8 @@ export default function HomePage() {
             ))}
           </ul>
 
-          {/* Elevação frontal para o primeiro regime (4H) */}
-          {result.recommendations?.[0] && (
-            <ElevationVisualization recommendation={result.recommendations[0]} study={result} />
-          )}
+          {/* Elevação frontal comparando os 3 regimes */}
+          {result.recommendations && <ElevationVisualization study={result} />}
 
           <div style={{ marginTop: 14 }}>
             <a
@@ -277,46 +275,49 @@ function Field({
 }
 
 function ElevationVisualization({
-  recommendation,
   study,
 }: {
-  recommendation: Recommendation;
   study: StudyResponse;
 }) {
-  // Escala: 1 metro = 120 pixels
-  const SCALE = 120;
-  const svgWidth = 600;
-  const svgHeight = 500;
+  // Escala: 1 metro = 100 pixels
+  const SCALE = 100;
+  const svgWidth = 900;
+  const svgHeight = 450;
+  const padding = 60;
 
-  // Dimensões em pixels
+  // Dimensões em metros
   const ceilingHeightPx = study.ceiling_height_m * SCALE;
   const eyeHeightPx = study.eye_height_m * SCALE;
-  const screenHeightPx = recommendation.screen_height_m * SCALE;
-  const screenWidthPx = screenHeightPx * (16 / 9);
-
-  // Posição da TV (centro ligeiramente abaixo dos olhos)
-  const tvCenterY = eyeHeightPx + SCALE * 0.3; // 30cm abaixo dos olhos
-  const tvTopY = tvCenterY - screenHeightPx / 2;
-  const tvBottomY = tvCenterY + screenHeightPx / 2;
-  const tvLeftX = (svgWidth - screenWidthPx) / 2;
-  const tvRightX = tvLeftX + screenWidthPx;
 
   // Piso
-  const floorY = svgHeight - 50;
+  const floorY = svgHeight - padding;
 
-  // Pessoa sentada
-  const headRadius = SCALE * 0.11;
-  const headCenterX = 80;
-  const headCenterY = floorY - eyeHeightPx;
+  // Renderizar 3 TVs (4H, 6H, 8H)
+  const tvs = study.recommendations.map((rec, idx) => {
+    const screenHeightPx = rec.screen_height_m * SCALE;
+    const screenWidthPx = screenHeightPx * (16 / 9);
+
+    // Posicionar TVs lado a lado
+    const xSpacing = (svgWidth - padding * 2) / 3;
+    const tvCenterX = padding + (idx + 0.5) * xSpacing;
+    const tvLeftX = tvCenterX - screenWidthPx / 2;
+
+    // TV posicionada 30cm abaixo dos olhos
+    const tvCenterY = eyeHeightPx + SCALE * 0.3;
+    const tvTopY = tvCenterY - screenHeightPx / 2;
+    const tvBottomY = tvCenterY + screenHeightPx / 2;
+
+    return { rec, idx, screenHeightPx, screenWidthPx, tvLeftX, tvTopY, tvBottomY, tvCenterY, tvCenterX };
+  });
 
   return (
     <div style={{ marginTop: 20, padding: 16, background: '#f9fafb', borderRadius: 12 }}>
-      <h4 style={{ fontSize: 14, fontWeight: 700, marginBottom: 12 }}>Elevação Frontal</h4>
+      <h4 style={{ fontSize: 14, fontWeight: 700, marginBottom: 12 }}>Elevação Frontal - Comparação 4H, 6H, 8H</h4>
       <svg
         viewBox={`0 0 ${svgWidth} ${svgHeight}`}
         style={{
           width: '100%',
-          maxWidth: 600,
+          maxWidth: '100%',
           border: '1px solid #e5e7eb',
           borderRadius: 8,
           background: '#fff',
@@ -325,149 +326,119 @@ function ElevationVisualization({
         {/* Piso */}
         <line x1="0" y1={floorY} x2={svgWidth} y2={floorY} stroke="#999" strokeWidth="2" />
 
-        {/* Parede de fundo */}
-        <line
-          x1={svgWidth * 0.75}
-          y1="0"
-          x2={svgWidth * 0.75}
-          y2={floorY}
-          stroke="#e5e7eb"
-          strokeWidth="2"
-        />
+        {/* Altura do teto */}
+        <line x1="0" y1={floorY - ceilingHeightPx} x2={svgWidth} y2={floorY - ceilingHeightPx} stroke="#999" strokeWidth="2" />
+        <line x1="0" y1={floorY - ceilingHeightPx} x2={svgWidth} y2={floorY - ceilingHeightPx} stroke="#d1d5db" strokeWidth="1" strokeDasharray="5,5" />
 
-        {/* Teto */}
-        <line
-          x1={svgWidth * 0.75}
-          y1={floorY - ceilingHeightPx}
-          x2={svgWidth}
-          y2={floorY - ceilingHeightPx}
-          stroke="#999"
-          strokeWidth="2"
-        />
-
-        {/* Linha de altura do teto */}
+        {/* Linha de altura dos olhos (referência) */}
         <line
           x1="0"
-          y1={floorY - ceilingHeightPx}
-          x2={svgWidth * 0.75}
-          y2={floorY - ceilingHeightPx}
-          stroke="#d1d5db"
-          strokeWidth="1"
-          strokeDasharray="5,5"
-        />
-
-        {/* Pessoa sentada (silhueta simplificada) */}
-        {/* Cabeça */}
-        <circle cx={headCenterX} cy={headCenterY} r={headRadius} fill="#8B4513" stroke="#333" strokeWidth="1.5" />
-
-        {/* Corpo */}
-        <rect
-          x={headCenterX - SCALE * 0.12}
-          y={headCenterY + headRadius + 5}
-          width={SCALE * 0.24}
-          height={SCALE * 0.4}
-          fill="#8B4513"
-          stroke="#333"
-          strokeWidth="1.5"
-        />
-
-        {/* Pernas */}
-        <line
-          x1={headCenterX - SCALE * 0.1}
-          y1={headCenterY + headRadius + SCALE * 0.45}
-          x2={headCenterX - SCALE * 0.1}
-          y2={floorY}
-          stroke="#333"
-          strokeWidth="2"
-        />
-        <line
-          x1={headCenterX + SCALE * 0.1}
-          y1={headCenterY + headRadius + SCALE * 0.45}
-          x2={headCenterX + SCALE * 0.1}
-          y2={floorY}
-          stroke="#333"
-          strokeWidth="2"
-        />
-
-        {/* Altura dos olhos (linha de referência) */}
-        <line
-          x1="0"
-          y1={headCenterY}
+          y1={floorY - eyeHeightPx}
           x2={svgWidth}
-          y2={headCenterY}
+          y2={floorY - eyeHeightPx}
           stroke="#ff6b6b"
-          strokeWidth="1"
+          strokeWidth="2"
           strokeDasharray="5,5"
         />
-        <text x="5" y={headCenterY - 5} fontSize="11" fill="#ff6b6b" fontWeight="bold">
-          Altura dos olhos
+        <text x="5" y={floorY - eyeHeightPx - 8} fontSize="12" fill="#ff6b6b" style={{ fontWeight: 'bold' }}>
+          Altura dos olhos ({study.eye_height_m}m)
         </text>
 
-        {/* TV na parede */}
-        <rect
-          x={tvLeftX}
-          y={floorY - tvBottomY}
-          width={screenWidthPx}
-          height={screenHeightPx}
-          fill="#1a1a1a"
-          stroke="#333"
-          strokeWidth="2"
-          rx="4"
-        />
+        {/* TVs */}
+        {tvs.map(({ rec, idx, screenHeightPx, screenWidthPx, tvLeftX, tvTopY, tvBottomY, tvCenterY, tvCenterX }) => {
+          const colors = ['#3b82f6', '#8b5cf6', '#ec4899'];
+          const color = colors[idx];
 
-        {/* Beisel da TV */}
-        <rect
-          x={tvLeftX + 8}
-          y={floorY - tvBottomY + 8}
-          width={screenWidthPx - 16}
-          height={screenHeightPx - 16}
-          fill="#333"
-          stroke="none"
-        />
+          return (
+            <g key={idx}>
+              {/* TV */}
+              <rect
+                x={tvLeftX}
+                y={floorY - tvBottomY}
+                width={screenWidthPx}
+                height={screenHeightPx}
+                fill="#000"
+                stroke={color}
+                strokeWidth="3"
+                rx="4"
+              />
 
-        {/* Etiqueta da TV com tamanho */}
-        <text
-          x={svgWidth / 2}
-          y={floorY - tvCenterY + 20}
-          fontSize="14"
-          fill="#333"
-          textAnchor="middle"
-          style={{ fontWeight: 'bold' }}
-        >
-          {recommendation.recommended_size_inches}"
-        </text>
+              {/* Beira da TV */}
+              <rect
+                x={tvLeftX + 5}
+                y={floorY - tvBottomY + 5}
+                width={screenWidthPx - 10}
+                height={screenHeightPx - 10}
+                fill="#1a1a1a"
+                stroke="none"
+              />
 
-        {/* Linhas de dimensão (altura da TV) */}
-        <g stroke="#0066cc" strokeWidth="1.5" fill="none">
-          {/* Linha esquerda */}
-          <line x1={tvLeftX - 30} y1={floorY - tvTopY} x2={tvLeftX - 20} y2={floorY - tvTopY} />
-          <line x1={tvLeftX - 30} y1={floorY - tvBottomY} x2={tvLeftX - 20} y2={floorY - tvBottomY} />
-          <line x1={tvLeftX - 25} y1={floorY - tvTopY} x2={tvLeftX - 25} y2={floorY - tvBottomY} />
+              {/* Rótulo do regime */}
+              <text
+                x={tvCenterX}
+                y={floorY - tvCenterY}
+                fontSize="16"
+                fill="#fff"
+                textAnchor="middle"
+                style={{ fontWeight: 'bold', pointerEvents: 'none' }}
+              >
+                {rec.recommended_size_inches}"
+              </text>
 
-          {/* Texto da altura */}
-          <text
-            x={tvLeftX - 50}
-            y={floorY - tvCenterY + 5}
-            fontSize="12"
-            fill="#0066cc"
-            textAnchor="end"
-            style={{ fontWeight: 'bold' }}
-          >
-            {recommendation.screen_height_m.toFixed(2)}m
-          </text>
-        </g>
+              {/* Nome do regime abaixo */}
+              <text
+                x={tvCenterX}
+                y={floorY + 25}
+                fontSize="13"
+                fill={color}
+                textAnchor="middle"
+                style={{ fontWeight: 'bold' }}
+              >
+                {rec.regime}
+              </text>
 
-        {/* Informações */}
-        <text x="10" y={svgHeight - 15} fontSize="11" fill="#666">
-          Escala: 1m = {SCALE}px | Regime: {recommendation.regime}
+              {/* Altura em metros */}
+              <text
+                x={tvLeftX - 15}
+                y={floorY - (tvTopY + tvBottomY) / 2 + 5}
+                fontSize="11"
+                fill="#666"
+                textAnchor="end"
+              >
+                {rec.screen_height_m.toFixed(2)}m
+              </text>
+
+              {/* Linha de dimensão vertical (opcional) */}
+              <line
+                x1={tvLeftX - 8}
+                y1={floorY - tvTopY}
+                x2={tvLeftX - 3}
+                y2={floorY - tvTopY}
+                stroke="#666"
+                strokeWidth="1"
+              />
+              <line
+                x1={tvLeftX - 8}
+                y1={floorY - tvBottomY}
+                x2={tvLeftX - 3}
+                y2={floorY - tvBottomY}
+                stroke="#666"
+                strokeWidth="1"
+              />
+              <line x1={tvLeftX - 5.5} y1={floorY - tvTopY} x2={tvLeftX - 5.5} y2={floorY - tvBottomY} stroke="#666" strokeWidth="1" />
+            </g>
+          );
+        })}
+
+        {/* Info de escala */}
+        <text x={svgWidth - 5} y={svgHeight - 5} fontSize="10" fill="#999" textAnchor="end">
+          Escala: 1m = {SCALE}px
         </text>
       </svg>
 
       <div style={{ marginTop: 12, fontSize: 12, color: '#666' }}>
         <p>
-          <strong>Resumo:</strong> A TV de {recommendation.recommended_size_inches}" (altura:{' '}
-          {recommendation.screen_height_m.toFixed(2)}m) ficará posicionada
-          {tvCenterY > headCenterY ? ' abaixo' : ' acima'} da linha dos olhos.
+          <strong>Comparação Visual:</strong> As três opções de regime (4H, 6H, 8H) com seus respectivos tamanhos de TV recomendados. Todas posicionadas ~30cm abaixo da linha dos olhos conforme norma AVIXA.
         </p>
       </div>
     </div>
