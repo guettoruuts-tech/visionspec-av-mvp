@@ -3,7 +3,7 @@ from fastapi.responses import Response
 from sqlalchemy.orm import Session
 
 from .database import Base, SessionLocal, engine
-from .engine import compute_recommendations
+from .engine import compute_recommendations, get_base
 from .models import Study
 from .pdf import generate_pdf
 from .schemas import StudyCreateRequest, StudyResponse
@@ -40,6 +40,19 @@ def create_study(payload: StudyCreateRequest, db: Session = Depends(get_db)):
     db.commit()
     db.refresh(study)
     return study
+
+
+@app.get('/specs')
+def specs():
+    """Retorna a tabela base de TVs (tamanhos e distâncias por regime)."""
+    return get_base()
+
+
+@app.get('/recommendations')
+def recommendations(distance_m: float):
+    """Retorna recomendações 4H/6H/8H para a distância informada e a tabela de tamanhos."""
+    recs = compute_recommendations(distance_m)
+    return {'distance_m': distance_m, 'recommendations': recs, 'base': get_base()}
 
 
 @app.get('/studies/{study_id}/pdf')
