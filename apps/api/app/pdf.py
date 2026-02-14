@@ -1,7 +1,6 @@
 from io import BytesIO
 from reportlab.lib.pagesizes import A4
 from reportlab.pdfgen import canvas
-from .engine import get_base
 
 
 def generate_pdf(study: dict) -> bytes:
@@ -20,6 +19,8 @@ def generate_pdf(study: dict) -> bytes:
         f"Cliente: {study['client_name']}",
         f"Ambiente: {study['room_name']}",
         f"Distância de visualização: {study['viewing_distance_m']} m",
+        f"Altura dos olhos: {study['eye_height_m']} m",
+        f"Pé direito (altura do teto): {study['ceiling_height_m']} m",
     ]
     for row in rows:
         pdf.drawString(40, y, row)
@@ -39,49 +40,13 @@ def generate_pdf(study: dict) -> bytes:
     }
     for rec in study['recommendations']:
         regime_label = regime_map.get(rec.get('regime', ''), rec.get('regime', ''))
-        status = 'Dentro da especificação' if rec.get('within_spec') else 'Acima da especificação'
         size_in = rec.get('recommended_size_inches')
-        diag_in = rec.get('recommended_diagonal_inches')
-        diag_m = rec.get('recommended_diagonal_m')
-        line = (
-            f"{regime_label}: {size_in}\" (diag. {round(diag_in,1) if diag_in else ''} in / {diag_m if diag_m else ''} m) · "
-            f"Distância máxima {rec.get('max_distance_m')} m · {status}"
-        )
+        screen_height_m = rec.get('screen_height_m', 0)
+        fits_ceiling = rec.get('fits_ceiling', False)
+        ceiling_status = '✓ Cabe' if fits_ceiling else '✗ Não cabe'
+        line = f"{regime_label}: {size_in}\" (altura: {screen_height_m}m) - {ceiling_status}"
         pdf.drawString(40, y, line)
         y -= 18
-
-    # Draw technical base table (size | diag m | 4H | 6H | 8H)
-    y -= 10
-    pdf.setFont('Helvetica-Bold', 12)
-    pdf.drawString(40, y, 'Tabela técnica (polegadas | diag (m) | 4H (m) | 6H (m) | 8H (m))')
-    y -= 18
-    pdf.setFont('Helvetica-Bold', 10)
-    pdf.drawString(40, y, 'in')
-    pdf.drawString(90, y, 'diag m')
-    pdf.drawString(170, y, '4H (m)')
-    pdf.drawString(240, y, '6H (m)')
-    pdf.drawString(310, y, '8H (m)')
-    y -= 14
-
-    base = []
-    try:
-        base = get_base()
-    except Exception:
-        base = []
-
-    pdf.setFont('Helvetica', 9)
-    for item in base:
-        if y < 60:
-            pdf.showPage()
-            y = height - 60
-            pdf.setFont('Helvetica', 9)
-        diag_m = round(item.get('diagonal_inches', 0) * 0.0254, 3)
-        pdf.drawString(40, y, str(item.get('size_inches')))
-        pdf.drawString(90, y, f"{diag_m}")
-        pdf.drawString(170, y, str(item.get('distance_4h_m')))
-        pdf.drawString(240, y, str(item.get('distance_6h_m')))
-        pdf.drawString(310, y, str(item.get('distance_8h_m')))
-        y -= 14
 
     pdf.setFont('Helvetica-Oblique', 9)
     pdf.drawString(40, 40, 'VisionSpec AV MVP · Documento técnico white-label')

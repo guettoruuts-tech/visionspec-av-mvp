@@ -222,5 +222,26 @@
     "distance_4h_m": 8.467788,
     "distance_6h_m": 12.701681,
     "distance_8h_m": 16.935575
+  },
+  {
+    "size_inches": 200,
+    "diagonal_inches": 98.039216,
+    "distance_4h_m": 9.951477,
+    "distance_6h_m": 14.927216,
+    "distance_8h_m": 19.902954
+  },
+  {
+    "size_inches": 220,
+    "diagonal_inches": 107.843137,
+    "distance_4h_m": 10.946624,
+    "distance_6h_m": 16.419937,
+    "distance_8h_m": 21.893249
+  },
+  {
+    "size_inches": 240,
+    "diagonal_inches": 117.647059,
+    "distance_4h_m": 11.941772,
+    "distance_6h_m": 17.912658,
+    "distance_8h_m": 23.883544
   }
 ]

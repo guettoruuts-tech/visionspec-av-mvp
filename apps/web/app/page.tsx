@@ -5,8 +5,11 @@ import { useState, useEffect } from 'react';
 type Recommendation = {
   regime: string;
   recommended_size_inches: number;
+  recommended_diagonal_inches: number;
+  screen_height_m: number;
   max_distance_m: number;
   within_spec: boolean;
+  fits_ceiling: boolean;
 };
 
 type StudyResponse = {
@@ -15,6 +18,8 @@ type StudyResponse = {
   client_name: string;
   room_name: string;
   viewing_distance_m: number;
+  eye_height_m: number;
+  ceiling_height_m: number;
   recommendations: Recommendation[];
 };
 
@@ -37,6 +42,8 @@ export default function HomePage() {
       client_name: String(fd.get('client_name') ?? ''),
       room_name: String(fd.get('room_name') ?? ''),
       viewing_distance_m: Number(fd.get('viewing_distance_m') ?? 0),
+      eye_height_m: Number(fd.get('eye_height_m') ?? 1.7),
+      ceiling_height_m: Number(fd.get('ceiling_height_m') ?? 2.8),
 
       white_label: {
         company_name: String(fd.get('company_name') ?? 'VisionSpec'),
@@ -100,6 +107,21 @@ export default function HomePage() {
             label="Distância (m)"
             name="viewing_distance_m"
             placeholder="Ex.: 3.2"
+            type="number"
+            step="0.1"
+          />
+
+          <Field
+            label="Altura dos olhos (m)"
+            name="eye_height_m"
+            defaultValue="1.7"
+            type="number"
+            step="0.1"
+          />
+          <Field
+            label="Pé direito (m)"
+            name="ceiling_height_m"
+            defaultValue="2.8"
             type="number"
             step="0.1"
           />
@@ -181,14 +203,19 @@ export default function HomePage() {
             <div>
               <strong>Distância:</strong> {result.viewing_distance_m} m
             </div>
+            <div>
+              <strong>Altura dos olhos:</strong> {result.eye_height_m} m
+            </div>
+            <div>
+              <strong>Pé direito:</strong> {result.ceiling_height_m} m
+            </div>
           </div>
 
           <h3 style={{ marginTop: 14, fontSize: 16, fontWeight: 800 }}>Recomendações</h3>
           <ul style={{ marginTop: 8 }}>
             {result.recommendations?.map((r, idx) => (
               <li key={idx}>
-                <strong>{r.regime}</strong>: {r.recommended_size_inches}" (máx. {r.max_distance_m}m) —{' '}
-                {r.within_spec ? 'OK' : 'Fora'}
+                <strong>{r.regime}</strong>: {r.recommended_size_inches}" {r.fits_ceiling ? '✓' : '✗'} (altura: {r.screen_height_m}m, máx. {r.max_distance_m}m)
               </li>
             ))}
           </ul>

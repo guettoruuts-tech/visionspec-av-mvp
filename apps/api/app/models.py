@@ -10,6 +10,8 @@ class Study(Base):
     client_name = Column(String(200), nullable=False)
     room_name = Column(String(200), nullable=False)
     viewing_distance_m = Column(Float, nullable=False)
+    eye_height_m = Column(Float, nullable=False)
+    ceiling_height_m = Column(Float, nullable=False)
     white_label = Column(JSON, nullable=False)
     recommendations = Column(JSON, nullable=False)
     created_at = Column(DateTime(timezone=True), server_default=func.now(), nullable=False)

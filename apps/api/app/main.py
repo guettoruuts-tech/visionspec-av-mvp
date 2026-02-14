@@ -27,12 +27,14 @@ def health():
 
 @app.post('/studies', response_model=StudyResponse)
 def create_study(payload: StudyCreateRequest, db: Session = Depends(get_db)):
-    recommendations = compute_recommendations(payload.viewing_distance_m)
+    recommendations = compute_recommendations(payload.viewing_distance_m, payload.eye_height_m, payload.ceiling_height_m)
     study = Study(
         project_name=payload.project_name,
         client_name=payload.client_name,
         room_name=payload.room_name,
         viewing_distance_m=payload.viewing_distance_m,
+        eye_height_m=payload.eye_height_m,
+        ceiling_height_m=payload.ceiling_height_m,
         white_label=payload.white_label.model_dump(),
         recommendations=recommendations,
     )
@@ -67,6 +69,8 @@ def study_pdf(study_id: int, db: Session = Depends(get_db)):
             'client_name': study.client_name,
             'room_name': study.room_name,
             'viewing_distance_m': study.viewing_distance_m,
+            'eye_height_m': study.eye_height_m,
+            'ceiling_height_m': study.ceiling_height_m,
             'white_label': study.white_label,
             'recommendations': study.recommendations,
         }
