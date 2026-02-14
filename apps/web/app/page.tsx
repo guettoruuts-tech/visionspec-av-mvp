@@ -220,6 +220,11 @@ export default function HomePage() {
             ))}
           </ul>
 
+          {/* Elevação frontal para o primeiro regime (4H) */}
+          {result.recommendations?.[0] && (
+            <ElevationVisualization recommendation={result.recommendations[0]} study={result} />
+          )}
+
           <div style={{ marginTop: 14 }}>
             <a
               href={`/api/studies/${result.id}/pdf`}
@@ -268,5 +273,203 @@ function Field({
         }}
       />
     </label>
+  );
+}
+
+function ElevationVisualization({
+  recommendation,
+  study,
+}: {
+  recommendation: Recommendation;
+  study: StudyResponse;
+}) {
+  // Escala: 1 metro = 120 pixels
+  const SCALE = 120;
+  const svgWidth = 600;
+  const svgHeight = 500;
+
+  // Dimensões em pixels
+  const ceilingHeightPx = study.ceiling_height_m * SCALE;
+  const eyeHeightPx = study.eye_height_m * SCALE;
+  const screenHeightPx = recommendation.screen_height_m * SCALE;
+  const screenWidthPx = screenHeightPx * (16 / 9);
+
+  // Posição da TV (centro ligeiramente abaixo dos olhos)
+  const tvCenterY = eyeHeightPx + SCALE * 0.3; // 30cm abaixo dos olhos
+  const tvTopY = tvCenterY - screenHeightPx / 2;
+  const tvBottomY = tvCenterY + screenHeightPx / 2;
+  const tvLeftX = (svgWidth - screenWidthPx) / 2;
+  const tvRightX = tvLeftX + screenWidthPx;
+
+  // Piso
+  const floorY = svgHeight - 50;
+
+  // Pessoa sentada
+  const headRadius = SCALE * 0.11;
+  const headCenterX = 80;
+  const headCenterY = floorY - eyeHeightPx;
+
+  return (
+    <div style={{ marginTop: 20, padding: 16, background: '#f9fafb', borderRadius: 12 }}>
+      <h4 style={{ fontSize: 14, fontWeight: 700, marginBottom: 12 }}>Elevação Frontal</h4>
+      <svg
+        viewBox={`0 0 ${svgWidth} ${svgHeight}`}
+        style={{
+          width: '100%',
+          maxWidth: 600,
+          border: '1px solid #e5e7eb',
+          borderRadius: 8,
+          background: '#fff',
+        }}
+      >
+        {/* Piso */}
+        <line x1="0" y1={floorY} x2={svgWidth} y2={floorY} stroke="#999" strokeWidth="2" />
+
+        {/* Parede de fundo */}
+        <line
+          x1={svgWidth * 0.75}
+          y1="0"
+          x2={svgWidth * 0.75}
+          y2={floorY}
+          stroke="#e5e7eb"
+          strokeWidth="2"
+        />
+
+        {/* Teto */}
+        <line
+          x1={svgWidth * 0.75}
+          y1={floorY - ceilingHeightPx}
+          x2={svgWidth}
+          y2={floorY - ceilingHeightPx}
+          stroke="#999"
+          strokeWidth="2"
+        />
+
+        {/* Linha de altura do teto */}
+        <line
+          x1="0"
+          y1={floorY - ceilingHeightPx}
+          x2={svgWidth * 0.75}
+          y2={floorY - ceilingHeightPx}
+          stroke="#d1d5db"
+          strokeWidth="1"
+          strokeDasharray="5,5"
+        />
+
+        {/* Pessoa sentada (silhueta simplificada) */}
+        {/* Cabeça */}
+        <circle cx={headCenterX} cy={headCenterY} r={headRadius} fill="#8B4513" stroke="#333" strokeWidth="1.5" />
+
+        {/* Corpo */}
+        <rect
+          x={headCenterX - SCALE * 0.12}
+          y={headCenterY + headRadius + 5}
+          width={SCALE * 0.24}
+          height={SCALE * 0.4}
+          fill="#8B4513"
+          stroke="#333"
+          strokeWidth="1.5"
+        />
+
+        {/* Pernas */}
+        <line
+          x1={headCenterX - SCALE * 0.1}
+          y1={headCenterY + headRadius + SCALE * 0.45}
+          x2={headCenterX - SCALE * 0.1}
+          y2={floorY}
+          stroke="#333"
+          strokeWidth="2"
+        />
+        <line
+          x1={headCenterX + SCALE * 0.1}
+          y1={headCenterY + headRadius + SCALE * 0.45}
+          x2={headCenterX + SCALE * 0.1}
+          y2={floorY}
+          stroke="#333"
+          strokeWidth="2"
+        />
+
+        {/* Altura dos olhos (linha de referência) */}
+        <line
+          x1="0"
+          y1={headCenterY}
+          x2={svgWidth}
+          y2={headCenterY}
+          stroke="#ff6b6b"
+          strokeWidth="1"
+          strokeDasharray="5,5"
+        />
+        <text x="5" y={headCenterY - 5} fontSize="11" fill="#ff6b6b" fontWeight="bold">
+          Altura dos olhos
+        </text>
+
+        {/* TV na parede */}
+        <rect
+          x={tvLeftX}
+          y={floorY - tvBottomY}
+          width={screenWidthPx}
+          height={screenHeightPx}
+          fill="#1a1a1a"
+          stroke="#333"
+          strokeWidth="2"
+          rx="4"
+        />
+
+        {/* Beisel da TV */}
+        <rect
+          x={tvLeftX + 8}
+          y={floorY - tvBottomY + 8}
+          width={screenWidthPx - 16}
+          height={screenHeightPx - 16}
+          fill="#333"
+          stroke="none"
+        />
+
+        {/* Etiqueta da TV com tamanho */}
+        <text
+          x={svgWidth / 2}
+          y={floorY - tvCenterY + 20}
+          fontSize="14"
+          fill="#333"
+          textAnchor="middle"
+          style={{ fontWeight: 'bold' }}
+        >
+          {recommendation.recommended_size_inches}"
+        </text>
+
+        {/* Linhas de dimensão (altura da TV) */}
+        <g stroke="#0066cc" strokeWidth="1.5" fill="none">
+          {/* Linha esquerda */}
+          <line x1={tvLeftX - 30} y1={floorY - tvTopY} x2={tvLeftX - 20} y2={floorY - tvTopY} />
+          <line x1={tvLeftX - 30} y1={floorY - tvBottomY} x2={tvLeftX - 20} y2={floorY - tvBottomY} />
+          <line x1={tvLeftX - 25} y1={floorY - tvTopY} x2={tvLeftX - 25} y2={floorY - tvBottomY} />
+
+          {/* Texto da altura */}
+          <text
+            x={tvLeftX - 50}
+            y={floorY - tvCenterY + 5}
+            fontSize="12"
+            fill="#0066cc"
+            textAnchor="end"
+            style={{ fontWeight: 'bold' }}
+          >
+            {recommendation.screen_height_m.toFixed(2)}m
+          </text>
+        </g>
+
+        {/* Informações */}
+        <text x="10" y={svgHeight - 15} fontSize="11" fill="#666">
+          Escala: 1m = {SCALE}px | Regime: {recommendation.regime}
+        </text>
+      </svg>
+
+      <div style={{ marginTop: 12, fontSize: 12, color: '#666' }}>
+        <p>
+          <strong>Resumo:</strong> A TV de {recommendation.recommended_size_inches}" (altura:{' '}
+          {recommendation.screen_height_m.toFixed(2)}m) ficará posicionada
+          {tvCenterY > headCenterY ? ' abaixo' : ' acima'} da linha dos olhos.
+        </p>
+      </div>
+    </div>
   );
 }
