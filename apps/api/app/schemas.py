@@ -23,9 +23,12 @@ class StudyRecommendation(BaseModel):
     regime: str
     recommended_size_inches: int
     recommended_diagonal_inches: float
+    screen_height_inches: float = Field(description="Altura da tela em polegadas")
+    screen_width_inches: float = Field(description="Largura da tela em polegadas")
+    screen_height_m: float = Field(description="Altura da tela em metros")
+    screen_width_m: float = Field(description="Largura da tela em metros")
     max_distance_m: float
     within_spec: bool
-    screen_height_m: float = Field(description="Altura física da tela em metros")
     fits_ceiling: bool = Field(description="Se a tela cabe no espaço vertical disponível")
 
 

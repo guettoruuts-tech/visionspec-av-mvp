@@ -58,7 +58,7 @@ def recommendations(distance_m: float):
 
 
 @app.get('/studies/{study_id}/pdf')
-def study_pdf(study_id: int, db: Session = Depends(get_db)):
+def study_pdf(study_id: int, inline: bool = False, db: Session = Depends(get_db)):
     study = db.get(Study, study_id)
     if not study:
         raise HTTPException(status_code=404, detail='Study not found')
@@ -75,8 +75,9 @@ def study_pdf(study_id: int, db: Session = Depends(get_db)):
             'recommendations': study.recommendations,
         }
     )
+    disposition = 'inline' if inline else 'attachment'
     return Response(
         content=pdf_data,
         media_type='application/pdf',
-        headers={'Content-Disposition': f'attachment; filename=study-{study_id}.pdf'},
+        headers={'Content-Disposition': f'{disposition}; filename=study-{study_id}.pdf'},
     )
