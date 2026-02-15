@@ -1,0 +1,39 @@
+version: '3.9'
+services:
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: visionspec
+      POSTGRES_USER: visionspec
+      POSTGRES_PASSWORD: visionspec
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    ports:
+      - '5432:5432'
+
+  api:
+    build:
+      context: .
+      dockerfile: apps/api/Dockerfile
+    environment:
+      DATABASE_URL: postgresql+psycopg2://visionspec:visionspec@db:5432/visionspec
+      BASE_TVS_FILE: /app/data/base_tvs.json
+    depends_on:
+      - db
+    ports:
+      - '8000:8000'
+
+  web:
+    build:
+      context: apps/web
+      dockerfile: Dockerfile
+    environment:
+      NEXT_PUBLIC_API_URL: http://api:8000
+
+    depends_on:
+      - api
+    ports:
+      - '3000:3000'
+
+volumes:
+  pgdata:
